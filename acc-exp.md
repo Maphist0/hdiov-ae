@@ -6,9 +6,9 @@
 3. The following experiments can be done on only one server.
 
 Structure of this guide.
-1. [Host setup](https://github.com/Maphist0/hdiov-ae/acc-exp.md#1-host-setup): install host drivers and configure QAT devices, launch VM and verify devices in the guest.
-2. [Guest setup](https://github.com/Maphist0/hdiov-ae/acc-exp.md#2-guest-setup): install guest drivers and run benchmarks.
-3. [Best practices and troubleshooting](https://github.com/Maphist0/hdiov-ae/acc-exp.md#3-best-practices-and-troubleshooting).
+1. [Host setup](https://github.com/Maphist0/hdiov-ae/blob/main/acc-exp.md#1-host-setup): install host drivers and configure QAT devices, launch VM and verify devices in the guest.
+2. [Guest setup](https://github.com/Maphist0/hdiov-ae/blob/main/acc-exp.md#2-guest-setup): install guest drivers and run benchmarks.
+3. [Best practices and troubleshooting](https://github.com/Maphist0/hdiov-ae/blob/main/acc-exp.md#3-best-practices-and-troubleshooting).
 
 ## 1. Host setup
 Pre-experiment checklist, please make sure every box below has been checked on your platform.
