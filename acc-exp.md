@@ -32,7 +32,7 @@ service qat_service status
 ### Step 1.1: PF configuration
 Next, configure QAT PF into either SRIOV or HD-IOV mode. Each QAT PF can work in either HD-IOV or SRIOV mode, not both. By default, the configuration file is located at `/etc/4xxx_dev{0,1,2,3}.conf`. Notice that in the same folder, you may see configuration files with `vf` or `shim` words in their names, we won't touch them.
 
-QAT can accelerate three types of algorithms: Data compression (DC, corresponds to Figure 14 in the paper), Asymmetric encryption (ASYM, Figure 15), and Symmetric encryption (SYM, Figure 16). Each PF can generate at maximum 16 virtual devices (VDEV) for all types, i.e., `4 ASYM + 4 SYM + 8 DC` or `16 ASYM` are both OK.
+QAT can accelerate three types of algorithms: Data compression (DC, corresponds to Figure 14 in the paper), Asymmetric encryption (ASYM, Figure 15), and Symmetric encryption (SYM, Figure 16). Each PF can generate at maximum 60 virtual devices (VDEV) for all types, i.e., `4 ASYM + 4 SYM + 8 DC` or `16 ASYM` are both OK.
 
 Assume we are configuring PF0, open the configuration file `vim /etc/4xxx_dev0.conf` and edit it according to the below instructions.
 ```
@@ -139,12 +139,11 @@ modprobe -r intel_qat # Remove in-tree driver
 modprobe mdev
 modprobe uio
 
-cd $ICP_ROOT
-modprobe build/intel_qat.ko
-
-modprobe build/qat_vqat.ko     # <-- for HD-IOV
-# OR
-modprobe build/qat_4xxxvf.ko   # <-- for SRIOV
+cd $ICP_ROOT/build
+insmod ./intel_qat.ko
+Option 1, for HD-IOV: insmod ./qat_vqat.ko
+Option 2, for SRIOV : insmod ./qat_4xxxvf.ko
+insmod ./usdm_drv.ko
 
 service qat_service restart
 service qat_service status
@@ -155,7 +154,6 @@ Verify VDEV works with `$ ./build/adf_ctl status`. You should see a `vqat-adi` d
 ### Step 2.2: Build benchmark
 The source code for QAT driver benchmarks are located at: `$ICP_ROOT/quickassist/lookaside/access_layer/src/sample_core/performance`.
 ```
-# Compile samples
 cd $ICP_ROOT
 make samples
 ```
@@ -163,10 +161,11 @@ make samples
 ### Step 2.3: Run benchmark
 Navigate to the benchmark directory and run it.
 ```
+cd $ICP_ROOT
 cd quickassist/lookaside/access_layer/src/sample_core/performance/build/linux_2.6/user_space
 ./cpa_sample_code
 ```
-The benchmark tries to run every algorithm that VDEV supports. The settings for each result are printed in the terminal. Please refer to the paper for the exact setting in Figure 14/15/16. 
+The benchmark tries to run every algorithm that VDEV supports. The settings for each result are printed in the terminal. Please refer to the paper for the exact setting in Figure 14/15/16.
 
 Host performance numbers can be obtained by running the benchmark in host QAT driver.
 
