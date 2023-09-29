@@ -1,10 +1,12 @@
 # HD-IOV: SW-HW Co-designed I/O Virtualization with Scalability and Flexibility for Hyper-Density Cloud
 
-This page holds the artifact evaluation for paper "HD-IOV" to be published in EuroSys'24.
+This page holds the artifact for paper "HD-IOV" to be published in EuroSys'24.
 
 HD-IOV is a software-hardware co-designed I/O virtualization solution. HD-IOV decouples virtualization and resource management logic from hardware devices to software, reducing device complexity and enabling more flexible hardware resource management. DMA transactions and interrupts are sent directly to guest VMs without VM exits. Isolation is achieved by leveraging an existing PCIe feature, PASID, allowing IOMMU to enforce queue pair level isolation. 
 
 Our experiments show that HD-IOV achieves similar performance as SR-IOV for both network and accelerator devices. Furthermore, HD-IOV supports maximally 2.96x higher device count with 2.9x faster median device initialization time.
+
+More details can be found in our EuroSys-2024 paper with the same title.
 
 ## A few notes
 HD-IOV is a rename of Intel Scalable I/O Virtualization (SIOV) due to annoymous paper submission rules. [Link to: Intel SIOV specification](https://cdrdv2-public.intel.com/671403/intel-scalable-io-virtualization-technical-specification.pdf)
