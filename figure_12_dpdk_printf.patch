@@ -1,0 +1,19 @@
+--- ./app/test-pmd/testpmd.c    2023-09-29 01:55:13.547987483 -0400
++++ ./app/test-pmd/testpmd.c    2023-09-29 02:00:31.736003392 -0400
+@@ -3854,6 +3854,7 @@
+ int
+ main(int argc, char** argv)
+ {
++       uint64_t start = rte_get_tsc_cycles();
+        int diag;
+        portid_t port_id;
+        uint16_t count;
+@@ -3988,6 +3989,8 @@
+                }
+                fprintf(stderr, "Start ports failed\n");
+        }
++       double cpu_time = (double)(rte_get_tsc_cycles() - start) / rte_get_tsc_hz();
++       fprintf(stderr, "Device initialization time: %f\n", cpu_time);
+
+        /* set all ports to promiscuous mode by default */
+        RTE_ETH_FOREACH_DEV(port_id) {
