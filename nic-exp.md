@@ -60,6 +60,20 @@ Below is a list of benchmark tools for each experiment.
 ## 3. Container setup
 
 ### Step 3.1: Build docker image
+Download DPDK 20.11 source code `$ wget https://fast.dpdk.org/rel/dpdk-20.11.9.tar.xz` and extract. Assume the extracted DPDK folder is called `./dpdk-stable-20.11.9`.
+
+Apply our logging patch, which prints the timestamp for the driver initialization time.
+```
+cd ./dpdk-stable-20.11.9
+cp ../figure_12_dpdk_printf.patch .
+
+# Dry-run, check if any error
+patch -p1 --dry-run < figure_12_dpdk_printf.patch
+
+# Actually patch it
+patch -p1 < figure_12_dpdk_printf.patch
+```
+
 Use the provided Dockerfile to build a container image.
 ```
 docker build .
