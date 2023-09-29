@@ -45,12 +45,12 @@ Below is a list of benchmark tools for each experiment.
 5. Figure 10
     1. This experiment is similar to figure 8, however, the number of QPs is set to different values.
     2. On client, run `$ iperf -s`.
-    3. In VM, run `$ iperf -c {CLIENT_IP} -i 1 -u -b 1G -l 512 -P 4`.
+    3. In VM, run `$ iperf -c {CLIENT_IP} -i 1 -u -b 1G -l 512 -P {NUM_QP}`, where `NUM_QP` is the number of QPs of the current VDEV.
 7. Figure 11
     1. This experiment is similar to figure 8, however, multiple VMs run `iperf` at the same time.
     2. We launch 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, and 758 VMs using VDEV.
     3. On client, run `$ iperf -s`.
-    4. On host, repeatedly run `$ ssh {VM_IP} "iperf -c {CLIENT_IP} -i 1 -u -b 1G -l 1470 -P 4"`, where `VM_IP` is the IP address of each launched VM.
+    4. On host, repeatedly run `$ ssh {VM_IP} "iperf -c {CLIENT_IP} -i 1 -u -b 1G -l 1470 -P {NUM_QP}"`, where `VM_IP` is the IP address of each launched VM. We set `NUM_QP` to 1 for the left half of figure 11, and set it to 4 for the right half of figure 11.
 8. Figure 13
     1. VM runs `nginx`, client runs `ApacheBench` to generate workload.
     2. In VM, install nginx. Then generate a small payload (1KB) and a larget payload (100KB) using `$ dd bs=1000 count=10 </dev/urandom >/usr/html/{SIZE}.bin`, where `SIZE` is `1kb` and `100kb`.
