@@ -9,7 +9,7 @@ Our experiments show that HD-IOV achieves similar performance as SR-IOV for both
 More details can be found in our EuroSys-2024 paper with the same title.
 
 ## A few notes
-HD-IOV is a rename of Intel Scalable I/O Virtualization (SIOV) due to annoymous paper submission rules. [Link to: Intel SIOV specification](https://cdrdv2-public.intel.com/671403/intel-scalable-io-virtualization-technical-specification.pdf)
+The code of HD-IOV has been contributed to the Intel Scalable I/O Virtualization (SIOV) project. [Link to: Intel SIOV specification](https://cdrdv2-public.intel.com/671403/intel-scalable-io-virtualization-technical-specification.pdf)
 
 ### Hardware requirements
 To deploy HD-IOV, you'll need two physical servers: one is the virtualization server (device-under-test), the other is a client.
