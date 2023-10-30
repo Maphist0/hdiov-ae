@@ -2,7 +2,7 @@
 
 ## A few notes
 1. This guide covers the experiment results in Figure 14, 15, and 16.
-2. The hardware requirement is listed in the [README](https://github.com/Maphist0/hdiov-ae) file.
+2. The hardware requirement is listed in the [README](https://github.com/Maphist0/hdiov-ae).
 3. The following experiments can be done on only one server.
 
 Structure of this guide.
@@ -163,11 +163,24 @@ Navigate to the benchmark directory and run it.
 ```
 cd $ICP_ROOT
 cd quickassist/lookaside/access_layer/src/sample_core/performance/build/linux_2.6/user_space
-./cpa_sample_code
+./cpa_sample_code includeLZ4=1 | tee cpa_sample_code.result
 ```
 The benchmark tries to run every algorithm that VDEV supports. The settings for each result are printed in the terminal. Please refer to the paper for the exact setting in Figure 14/15/16.
 
 Host performance numbers can be obtained by running the benchmark in host QAT driver.
+
+### Step 2.4: Understand benchmark results
+Three scripts are provided to extract necessary results from the log.
+```
+# Compression results
+./figure_14_extract_results.sh ./cpa_sample_code.result
+
+# Asymmetric encryption results
+./figure_15_extract_results.sh ./cpa_sample_code.result
+
+# Symmetric encryption results
+./figure_16_extract_results.sh ./cpa_sample_code.result
+```
 
 ## 3. Best practices and troubleshooting
 
