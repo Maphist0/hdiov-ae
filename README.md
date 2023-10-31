@@ -37,12 +37,29 @@ To deploy HD-IOV, you'll need two physical servers: one is the virtualization se
     2. Install driver on host and guest according to the guideline
 
 ## 1. Network Virtualization Experiments
-Figure 8-13 are accelerator virtualization results. The detailed setup guide can be found in [nic-exp.md](https://github.com/Maphist0/hdiov-ae/blob/main/nic-exp.md).
+*Experiment (E1):* Network virtualization experiments with virtual machines.
+
+We create a virtual device (VDEV) of HD-IOV, start a virtual machine with the VDEV, and launch benchmarks inside the VM, which communicates with the client.
+
+*Experiment (E2):* Network virtualization scalability experiments. 
+
+This experiment shares the same steps as experiment E1. Instead of launching one VM, this experiment creates all VDEVs that the physical device supports and launches all VMs simultaneously. The iperf tool is used, the packet size is fixed to 1470bytes in this experiment.
+
+*Experiment (E3):* Network virtualization experiments with containers.
+
+We create all VDEVs that the physical device supports and launches each container one-by-one. Each container uses one VDEV. We launch DPDK testpmd sample application in the container. The initialization time will print in the terminal.
+
+These three experiments cover Figures 8-13 in the paper. Instructions for these three experiments can be found in [nic-exp.md](https://github.com/Maphist0/hdiov-ae/blob/main/nic-exp.md).
 
 ## 2. Accelerator Virtualization Experiments
-Figure 14, 15, and 16 are accelerator virtualization results. The detailed setup guide can be found in [acc-exp.md](https://github.com/Maphist0/hdiov-ae/blob/main/acc-exp.md).
 
-##
+*Experiment (E4):* Accelerator virtualization experiments.
+
+We create VDEVs for Intel QAT devices, start a virtual machine with the VDEV, and launch benchmarks inside the VM.
+ 
+This experiment covers Figure 14-16 in the paper. The detailed setup guide can be found in [acc-exp.md](https://github.com/Maphist0/hdiov-ae/blob/main/acc-exp.md).
+
+## 3. Reference
 ```
 @inproceedings{hdiov-eurosys24,
   author       = {Zongpu Zhang and
