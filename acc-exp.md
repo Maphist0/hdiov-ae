@@ -112,6 +112,8 @@ Append a new device option to the QEMU command when launching the VM. Please mak
 -device vfio-pci,sysfsdev=/sys/devices/pci0000\:6b/0000\:6b\:00.0/2b8d29e3-6ded-4f87-96d8-65b28e64ef7c
 ```
 
+An example of the QEMU command can be found at: [start_qemu.sh](https://github.com/Maphist0/hdiov-ae/blob/main/start_qemu.sh).
+
 ### Step 1.4: Verify VDEV in VM
 When VM boots up, inside guest OS, you should see the following QAT VDEV device with `$ lspci`.
 ```
