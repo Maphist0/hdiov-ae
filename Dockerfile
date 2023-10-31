@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update
 
-RUN apt install -y sudo git gcc meson gdb python3 python3-pip pkg-config libnuma-dev libjson-c-dev libpcap-dev libelf-dev libbpf libbpf-dev apt-utils
+RUN apt install -y sudo git gcc meson gdb python3 python3-pip pkg-config libnuma-dev libjson-c-dev libpcap-dev libelf-dev libbpf-dev apt-utils
 
 RUN pip3 install pyelftools
 
