@@ -21,5 +21,4 @@ COPY dpdk-stable-20.11.9 /tmp/dpdk
 RUN cd /tmp/dpdk && \
         meson build && \
         ninja -C build && \
-        ninja -C build install && \
-        cd /tmp && rm -rf *
+        ninja -C build install
