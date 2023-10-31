@@ -15,7 +15,7 @@ Pre-experiment checklist, please make sure every box below has been checked on y
 - [ ] Download and install [QEMU](https://www.qemu.org). Validated in Ubuntu 20.04 (host) with QEMU 5.0.0.
 
 ### Step 1.1: Create VDEV
-Next, load Intel E810 driver and create VDEV. Assume the PF has a BDF of `0000:16:00.0`. 
+Next, load Intel E810 driver and create VDEV. Assume the PF has a BDF of `0000:16:00.0`. Assume the uuid is `2b8d29e3-6ded-4f87-96d8-65b28e64ef7c`, this string can be generated using `uuidgen`.
 ```
 insmod ice.ko
 echo "2b8d29e3-6ded-4f87-96d8-65b28e64ef7c" > /sys/class/mdev_bus/0000:16:00.0/mdev_supported_types/ice-vdcm/create
@@ -80,7 +80,7 @@ patch -p1 < figure_12_dpdk_printf.patch
 
 Use the provided Dockerfile to build a container image.
 ```
-docker build .
+docker build --tag {TAG} .
 ```
 
 ### Step 3.2: Create VDEV (similar to [step 1.1](https://github.com/Maphist0/hdiov-ae/blob/main/nic-exp.md#step-11-create-vdev))
@@ -91,20 +91,28 @@ echo "2b8d29e3-6ded-4f87-96d8-65b28e64ef7c" > /sys/class/mdev_bus/0000:16:00.0/m
 ```
 Enable hugepages.
 ```
-echo 1024 > /sys/devices/system/node/node0/hugepages/hugepages-2048kB
-echo 1024 > /sys/devices/system/node/node1/hugepages/hugepages-2048kB
+echo 1024 > /sys/devices/system/node/node0/hugepages/hugepages-2048kB/nr_hugepages
+echo 1024 > /sys/devices/system/node/node1/hugepages/hugepages-2048kB/nr_hugepages
 mount -t hugetlbfs -o pagesize=2M none /dev/hugepages
 ```
 ### Step 3.3: Launch container
-Please replace the argument `{IMAGE}` with the name in step 3.1.
+Find the `iommu_group` of the current vdev by.
 ```
-docker run -it --name=test --device=/dev/vfio/172 --device=/dev/vfio/vfio --ulimit memlock=-1:-1  -v /dev/hugepages:/dev/hugepages -v /sys:/sys -v /dev:/dev {IMAGE} /bin/bash
+ls /sys/bus/mdev/devices/2b8d29e3-6ded-4f87-96d8-65b28e64ef7c/ -al | grep iommu_groups
+
+# Example output (iommu_group is 172 in this case):
+lrwxrwxrwx  1 root root    0 xxx xx xx:xx iommu_group -> ../../../../../kernel/iommu_groups/172
+```
+
+Please replace the argument `{TAG}` with the name in step 3.1.
+```
+docker run -it --name=test --device=/dev/vfio/172 --device=/dev/vfio/vfio --ulimit memlock=-1:-1  -v /dev/hugepages:/dev/hugepages -v /sys:/sys -v /dev:/dev --rm --cap-add=NET_ADMIN --cap-add=SYS_RESOURCE --cap-add=SYS_NICE {TAG} /bin/bash
 ```
 
 ### Step 3.4: Run benchmark
 In the terminal of the container, run DPDK testpmd, the initialization time will print to the terminal.
 ```
-sudo ./build/app/dpdk-testpmd -l 1-3 -n 4  -- -i --total-num-mbufs=1025
+/tmp/dpdk/build/app/dpdk-testpmd -l 1-3 -n 4  -- -i --total-num-mbufs=1025
 ```
 Our test procedure for Figure 12 is as follows:
 1. Start the i-th container, gather its results in the terminal. Then stop the i-th container. `i += 1`.
