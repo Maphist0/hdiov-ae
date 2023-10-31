@@ -38,22 +38,22 @@ In the following discussion, `CLIENT_IP` refers to the IP address of the client.
 ### Step 2.1: Start benchmark
 Below is a list of benchmark tools for each experiment.
 1. Figure 8
-    1. `iperf` is used in this experiment.
-    2. On client, run `$ iperf -s`.
-    3. In VM, run `$ iperf -c {CLIENT_IP} -i 1 -u -b 1G -l {PKT_SIZE} -P 4`, where `PKT_SIZE` is 64, 128, 256, 512, 1024, 1470.
+    1. `iperf3` is used in this experiment.
+    2. On client, run `$ iperf3 -s`.
+    3. In VM, run `$ iperf3 -c {CLIENT_IP} -i 1 -u -b 10G -l {PKT_SIZE} -P 4`, where `PKT_SIZE` is 64, 128, 256, 512, 1024, 1470.
 3. Figure 9
     1. `ping` is used in this experiment.
     2. In VM, run `$ ping -s {PKT_SIZE} {CLIENT_IP}`, where `PKT_SIZE` is 56, 120, 248, 504, 1016, and 1462. This value plus 8 bytes of ICMP header is the actual packet size.
 5. Figure 10
     1. This experiment is similar to figure 8, however, the number of QPs is set to different values.
-    2. On client, run `$ iperf -s`.
-    3. In VM, run `$ iperf -c {CLIENT_IP} -i 1 -u -b 1G -l 512 -P {NUM_QP}`, where `NUM_QP` is the number of QPs of the current VDEV.
+    2. On client, run `$ iperf3 -s`.
+    3. In VM, run `$ iperf3 -c {CLIENT_IP} -i 1 -u -b 10G -l 512 -P {NUM_QP}`, where `NUM_QP` is the number of QPs of the current VDEV.
     4. The number of QPs can be controlled by `$ ethtool -L {INTERFACE} rx {NUM_QP} tx {NUM_QP}`, where `INTERFACE` is the interface name of the VDEV (can be checked by `ifconfig`).
 7. Figure 11
     1. This experiment is similar to figure 8, however, multiple VMs run `iperf` at the same time.
     2. We launch 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, and 758 VMs using VDEV.
-    3. On client, run `$ iperf -s`.
-    4. On host, repeatedly run `$ ssh {VM_IP} "iperf -c {CLIENT_IP} -i 1 -u -b 1G -l 1470 -P {NUM_QP}"`, where `VM_IP` is the IP address of each launched VM. We set `NUM_QP` to 1 for the left half of figure 11, and set it to 4 for the right half of figure 11.
+    3. On client, run `$ iperf3 -s`.
+    4. On host, repeatedly run `$ ssh {VM_IP} "iperf3 -c {CLIENT_IP} -i 1 -u -b 10G -l 1470 -P {NUM_QP}"`, where `VM_IP` is the IP address of each launched VM. We set `NUM_QP` to 1 for the left half of figure 11, and set it to 4 for the right half of figure 11.
 8. Figure 13
     1. VM runs `nginx`, client runs `ApacheBench` to generate workload.
     2. In VM, install nginx. Then generate a small payload (1KB) and a larget payload (100KB) using `$ dd bs=1000 count={COUNT} </dev/urandom >/usr/html/{SIZE}.bin`, where `COUNT=1` means 1kB (`SIZE=1kb`) and `COUNT=100` means 100kB (`SIZE=100kb`).
