@@ -24,8 +24,10 @@ echo "2b8d29e3-6ded-4f87-96d8-65b28e64ef7c" > /sys/class/mdev_bus/0000:16:00.0/m
 ### Step 1.2: Start VM
 Append a new device option to the QEMU command when launching the VM. Please make sure BDF and UUID numbers have been changed to your case.
 ```
--device vfio-pci,sysfsdev=/sys/devices/pci0000\:16/0000\:16\:00.0/2b8d29e3-6ded-4f87-96d8-65b28e64ef7c
+-device vfio-pci,sysfsdev=/sys/bus/mdev/devices/2b8d29e3-6ded-4f87-96d8-65b28e64ef7c
 ```
+
+An example of the QEMU command can be found at: [start_qemu.sh](https://github.com/Maphist0/hdiov-ae/blob/main/start_qemu.sh).
 
 You may need to manually assign an IP for VM. Please verify that the network between VM and the client works, e.g., by using `ping`.
 
@@ -46,6 +48,7 @@ Below is a list of benchmark tools for each experiment.
     1. This experiment is similar to figure 8, however, the number of QPs is set to different values.
     2. On client, run `$ iperf -s`.
     3. In VM, run `$ iperf -c {CLIENT_IP} -i 1 -u -b 1G -l 512 -P {NUM_QP}`, where `NUM_QP` is the number of QPs of the current VDEV.
+    4. The number of QPs can be controlled by `$ ethtool -L {INTERFACE} rx {NUM_QP} tx {NUM_QP}`, where `INTERFACE` is the interface name of the VDEV (can be checked by `ifconfig`).
 7. Figure 11
     1. This experiment is similar to figure 8, however, multiple VMs run `iperf` at the same time.
     2. We launch 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, and 758 VMs using VDEV.
@@ -53,9 +56,10 @@ Below is a list of benchmark tools for each experiment.
     4. On host, repeatedly run `$ ssh {VM_IP} "iperf -c {CLIENT_IP} -i 1 -u -b 1G -l 1470 -P {NUM_QP}"`, where `VM_IP` is the IP address of each launched VM. We set `NUM_QP` to 1 for the left half of figure 11, and set it to 4 for the right half of figure 11.
 8. Figure 13
     1. VM runs `nginx`, client runs `ApacheBench` to generate workload.
-    2. In VM, install nginx. Then generate a small payload (1KB) and a larget payload (100KB) using `$ dd bs=1000 count=10 </dev/urandom >/usr/html/{SIZE}.bin`, where `SIZE` is `1kb` and `100kb`.
+    2. In VM, install nginx. Then generate a small payload (1KB) and a larget payload (100KB) using `$ dd bs=1000 count={COUNT} </dev/urandom >/usr/html/{SIZE}.bin`, where `COUNT=1` means 1kB (`SIZE=1kb`) and `COUNT=100` means 100kB (`SIZE=100kb`).
     3. In VM, copy the nginx [configuration file](https://github.com/Maphist0/hdiov-ae/blob/main/figure_13_nginx.conf) `$ cp figure_13_nginx.conf /etc/nginx/nginx.conf`. Then start nginx by `$ start-stop-daemon -S -x "/usr/sbin/nginx" -p "/var/run/nginx.pid"`.
     4. In client, run the [experiment script](https://github.com/Maphist0/hdiov-ae/blob/main/figure_13_client_ab.sh) to obtain all performance results: `$ ./figure_13_client_ab.sh ${VM_IP}`, replace `VM_IP` with the VM's ip address.
+    5. The output of this script follows this format: `Number-of-clients, Requests/s with 1kB load, Requests/s with 100kB load, KBps with 1kB load, KBps with 100kB load, latency numbers ...`.
 
 ## 3. Container setup
 
